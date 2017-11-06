@@ -27,7 +27,10 @@ class Elevator {
   }
   floorUp() {
     if(this.floor<this.MAXFLOOR) this.floor+=1;
-    else console.log("You are already on the top floor!");
+    else {
+      console.log("You are already on the top floor!");
+      this.direction = "down";
+    }
     this.waitingList.forEach((e,i)=>{
       if(e.originFloor == this.floor) {
         this._passengersEnter(e);
@@ -37,7 +40,10 @@ class Elevator {
   }
   floorDown() {
     if(this.floor>0) this.floor-=1;
-    else console.log("Can't dig deeper than floor 0!");
+    else {
+      console.log("Can't dig deeper than floor 0!");
+      this.direction = "up";
+    }
     this.passengers.forEach((e,i)=>{
       if(e.destinationFloor == this.floor) {
         this._passengersLeave(e);
