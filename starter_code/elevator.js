@@ -3,6 +3,8 @@ class Elevator {
     this.floor      = 0;
     this.MAXFLOOR   = 10;
     this.requests   = [];
+    this.waitingList = [];
+    this.passengers = [];
     this.direction = "up";
   }
 
@@ -15,17 +17,38 @@ class Elevator {
   update() {
     this.log();
   }
-  _passengersEnter() { }
-  _passengersLeave() { }
+  _passengersEnter(person) {
+    this.passengers.push(person);
+    this.requests.push(person.destinationFloor);
+    console.log(`${person.name} has enter the elevator`);
+  }
+  _passengersLeave(person) {
+    console.log(`${person.name} has left the elevator`);
+  }
   floorUp() {
     if(this.floor<this.MAXFLOOR) this.floor+=1;
     else console.log("You are already on the top floor!");
+    this.waitingList.forEach((e,i)=>{
+      if(e.originFloor == this.floor) {
+        this._passengersEnter(e);
+        this.waitingList.splice(i,1);
+      }
+    });
   }
   floorDown() {
     if(this.floor>0) this.floor-=1;
     else console.log("Can't dig deeper than floor 0!");
+    this.passengers.forEach((e,i)=>{
+      if(e.destinationFloor == this.floor) {
+        this._passengersLeave(e);
+        this.passengers.splice(i,1);
+      }
+    });
   }
-  call() { }
+  call(person) {
+    this.waitingList.push(person);
+    this.requests.push(person.originFloor);
+  }
   log() {
     console.log(`Direction: ${this.direction} | Floor: ${this.floor}`);
   }
